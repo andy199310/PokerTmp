@@ -5,11 +5,16 @@ package com.weigreen.poler;
  */
 public class Card
 {
-    private short Id;
+    private short id;
+
+    public Card(short id)
+    {
+        this.id = id;
+    }
 
     public short getId()
     {
-        return Id;
+        return id;
     }
 
     /**
@@ -18,7 +23,7 @@ public class Card
      */
     public short getSuit()
     {
-        short Suit = (short) (Id / 100);
+        short Suit = (short) (id / 100);
         return Suit;
     }
 
@@ -27,7 +32,7 @@ public class Card
      */
     public short getNumber()
     {
-        short Number = (short) (Id % 100);
+        short Number = (short) (id % 100);
         return Number;
     }
 }
