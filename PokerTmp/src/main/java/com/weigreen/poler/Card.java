@@ -12,6 +12,15 @@ public class Card
         this.id = id;
     }
 
+    /**
+     * Create the card
+     * @param suit
+     * @param number
+     */
+    public Card(short suit, short number){
+        this.id = (short) (suit*100 + number);
+    }
+
     public short getId()
     {
         return id;
