@@ -33,7 +33,7 @@ public class TFHServerRoom
     {
 
     }
-/*
+
     public void haveNewData(TFHBridgeMain main)
     {
         short command = main.getCommand();
@@ -46,7 +46,7 @@ public class TFHServerRoom
             short newGodCardSuit = godCardData.getGodCardSuit();
             short newHeap = godCardData.getHeap();
 
-            if(newGodCardSuit == 0 && newHeap == 0)
+            if(newHeap == 0)
             {
                 pass++;
 
@@ -101,7 +101,7 @@ public class TFHServerRoom
             server.sendToAll(newMain);
         }
     }
-*/
+
 
     private TFHBridgeDataRoom analyze(TFHBridgeDataPlayer playerData)
     {
