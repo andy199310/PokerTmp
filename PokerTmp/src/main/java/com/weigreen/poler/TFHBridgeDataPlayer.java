@@ -6,14 +6,12 @@ package com.weigreen.poler;
 public class TFHBridgeDataPlayer implements java.io.Serializable
 {
     private final short PLAYER_NUMBER;
-    private final short CARD_SUIT;
-    private final short CARD_NUMBER;
+    private final short CARD_ID;
 
-    public TFHBridgeDataPlayer(short playerNumber, short cardSuit, short cardNumber)
+    public TFHBridgeDataPlayer(short playerNumber, short cardId)
     {
         this.PLAYER_NUMBER = playerNumber;
-        this.CARD_SUIT = cardSuit;
-        this.CARD_NUMBER = cardNumber;
+        this.CARD_ID = cardId;
     }
 
     public short getPlayerNumber()
@@ -21,14 +19,9 @@ public class TFHBridgeDataPlayer implements java.io.Serializable
         return this.PLAYER_NUMBER;
     }
 
-    public short getCardSuit()
+    public short getCardId()
     {
-        return this.CARD_SUIT;
-    }
-
-    public short getCardNumber()
-    {
-        return this.CARD_NUMBER;
+        return this.CARD_ID;
     }
 
 
