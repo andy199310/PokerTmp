@@ -33,7 +33,7 @@ public class TFHServerRoom
     {
 
     }
-
+/*
     public void haveNewData(TFHBridgeMain main)
     {
         short command = main.getCommand();
@@ -101,7 +101,7 @@ public class TFHServerRoom
             server.sendToAll(newMain);
         }
     }
-
+*/
 
     private TFHBridgeDataRoom analyze(TFHBridgeDataPlayer playerData)
     {
