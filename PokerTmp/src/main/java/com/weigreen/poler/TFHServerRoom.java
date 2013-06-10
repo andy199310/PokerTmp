@@ -14,6 +14,7 @@ public class TFHServerRoom implements Runnable
     private int roomPort;
 
     private short pass = 0; // pass times
+    private short totalPlayerNumber;
 
     // godCard
     private short callPlayerNumber; // the player number which call
@@ -38,10 +39,10 @@ public class TFHServerRoom implements Runnable
 
         roomPort = port;
 
-
+        totalPlayerNumber = -1;
     }
 
-    /*
+
     public void haveNewData(TFHBridgeMain main)
     {
         System.out.println("haveNewData()");
@@ -124,8 +125,18 @@ public class TFHServerRoom implements Runnable
 
             server.sendToAll(newMain);
         }
+
+        if(command == TFHComm.ROOM_NEW_PLAYER)
+        {
+            totalPlayerNumber++;
+
+            TFHBridgeDataNewPlayer newPlayerData = new TFHBridgeDataNewPlayer(totalPlayerNumber);
+            TFHBridgeMain newMain = new TFHBridgeMain(TFHComm.ROOM_NEW_PLAYER, newPlayerData);
+
+            server.sendToAll(newMain);
+        }
     }
-*/
+
 
     private TFHBridgeDataRoom analyze(TFHBridgeDataPlayer playerData)
     {
@@ -255,7 +266,7 @@ public class TFHServerRoom implements Runnable
 
                 while(iterator.hasNext())
                 {
-                    System.out.println( "normalCardNumber: " + cardNumber[iterator.next()]);
+                    System.out.println("normalCardNumber: " + cardNumber[iterator.next()]);
 
                     normalCardNumbers.add(cardNumber[iterator.next()]);
                 }
