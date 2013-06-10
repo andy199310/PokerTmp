@@ -1,20 +1,17 @@
 package com.weigreen.poler;
 
-import android.util.Log;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Random;
+import java.util.Timer;
 
-/**
- * Created by wind on 2013/6/7.
- */
-public class TFHServerRoom
+
+public class TFHServerRoom implements Runnable
 {
-    private final String LOG_TAG = "TFHServerRoom.java";
+    private int roomPort;
 
     private short pass = 0; // pass times
 
@@ -31,22 +28,29 @@ public class TFHServerRoom
     private short easternHeap = 0;
     private short northernHeap = 0;
 
+    private TFHServerRoomListener server;
 
-    // unfinished!!!!!!!!!!!
-    public TFHServerRoom(int port)
+
+    public TFHServerRoom(int port, String roomName)
     {
+        server = new TFHServerRoomListener(port, this);
+        new Thread(server).start();
+
+        roomPort = port;
+
 
     }
-/*
+
+    /*
     public void haveNewData(TFHBridgeMain main)
     {
-        Log.d(LOG_TAG, "haveNewData()");
+        System.out.println("haveNewData()");
 
         short command = main.getCommand();
 
         if(command == TFHComm.GOD_CARD_DATA)
         {
-            Log.d(LOG_TAG, "TFHComm.GOD_CARD_DATA");
+            System.out.println("TFHComm.GOD_CARD_DATA");
 
             TFHBridgeDataGodCard godCardData = (TFHBridgeDataGodCard) main.getData();
 
@@ -56,13 +60,13 @@ public class TFHServerRoom
 
             if(newHeap == 0)
             {
-                Log.d(LOG_TAG, "Player passed");
+                System.out.println("Player passed");
 
                 pass++;
 
                 if(pass >= 3)
                 {
-                    Log.d(LOG_TAG, "triple pass, over to call god card");
+                    System.out.println("triple pass, over to call god card");
 
                     initialPlayerNumber = callPlayerNumber;
 
@@ -73,7 +77,7 @@ public class TFHServerRoom
                 }
                 else
                 {
-                    Log.d(LOG_TAG, "pass < 3");
+                    System.out.println("pass < 3");
 
                     TFHBridgeDataGodCard newGodCardData = new TFHBridgeDataGodCard("KEEP", newCallPlayerNumber, newGodCardSuit, newHeap);
                     TFHBridgeMain newMain = new TFHBridgeMain(TFHComm.GOD_CARD_DATA, newGodCardData);
@@ -83,7 +87,7 @@ public class TFHServerRoom
             }
             else
             {
-                Log.d(LOG_TAG, "no pass, keep call");
+                System.out.println("no pass, keep call");
 
                 pass = 0;
 
@@ -101,7 +105,7 @@ public class TFHServerRoom
 
         if(command == TFHComm.PLAYER_DATA)
         {
-            Log.d(LOG_TAG, "TFHComm.PLAYER_DATA");
+            System.out.println("TFHComm.PLAYER_DATA");
 
             TFHBridgeDataPlayer playerData = (TFHBridgeDataPlayer) main.getData();
 
@@ -113,7 +117,7 @@ public class TFHServerRoom
 
         if(command == TFHComm.CARD_DATA)
         {
-            Log.d(LOG_TAG, "TFHComm.CARD_DATA");
+            System.out.println("TFHComm.CARD_DATA");
 
             TFHBridgeDataCard cardData = new TFHBridgeDataCard(Functions.dealCard());
             TFHBridgeMain newMain = new TFHBridgeMain(TFHComm.CARD_DATA, cardData);
@@ -125,14 +129,14 @@ public class TFHServerRoom
 
     private TFHBridgeDataRoom analyze(TFHBridgeDataPlayer playerData)
     {
-        Log.d(LOG_TAG, "analyze()");
+        System.out.println("analyze()");
 
         short playerNumber = playerData.getPlayerNumber();
         short cardId = playerData.getCardId();
 
         if(++part == 1)
         {
-            Log.d(LOG_TAG, "first player");
+            System.out.println("first player");
 
             initialCardSuit = (short)(cardId / 100);
             stageCardIds[playerNumber] = cardId;
@@ -142,7 +146,7 @@ public class TFHServerRoom
         }
         else if(part < 4)
         {
-            Log.d(LOG_TAG, "other players");
+            System.out.println("other players");
 
             stageCardIds[playerNumber] = cardId;
 
@@ -151,7 +155,7 @@ public class TFHServerRoom
         }
         else
         {
-            Log.d(LOG_TAG, "forth player, start a new game");
+            System.out.println("forth player, start a new game");
 
             part = 0;
 
@@ -161,13 +165,13 @@ public class TFHServerRoom
 
             if(winPlayerId == 0 || winPlayerId == 2)
             {
-                Log.d(LOG_TAG, "east and west players WIN");
+                System.out.println("east and west players WIN");
 
                 easternHeap++;
             }
             else
             {
-                Log.d(LOG_TAG, "north and south players WIN");
+                System.out.println("north and south players WIN");
 
                 northernHeap++;
             }
@@ -181,7 +185,7 @@ public class TFHServerRoom
 
     private short getWinPlayerNumber(short[] stageCardIds)
     {
-        Log.d(LOG_TAG, "getWinPlayerNumber()");
+        System.out.println("getWinPlayerNumber()");
 
         short[] cardSuit = new short[4];
         short[] cardNumber = new short[4];
@@ -189,7 +193,7 @@ public class TFHServerRoom
         LinkedList<Short> godCardPlayerList = new LinkedList<Short>();
         LinkedList<Short> normalCardPlayerList = new LinkedList<Short>();
 
-        Log.d(LOG_TAG, "get suits and numbers of cards");
+        System.out.println("get suits and numbers of cards");
         for(int i = 0; i < 4; i++)
         {
             cardSuit[i] = (short)(stageCardIds[i] / 100);
@@ -207,7 +211,7 @@ public class TFHServerRoom
 
         if(!godCardPlayerList.isEmpty())
         {
-            Log.d(LOG_TAG, "biggest card is god card");
+            System.out.println("biggest card is god card");
 
             if(godCardPlayerList.size() > 1)
             {
@@ -217,20 +221,20 @@ public class TFHServerRoom
 
                 while(iterator.hasNext())
                 {
-                    Log.d(LOG_TAG, "godCardNumber: " + cardNumber[iterator.next()]);
+                    System.out.println("godCardNumber: " + cardNumber[iterator.next()]);
 
                     godCardNumbers.add(cardNumber[iterator.next()]);
                 }
 
                 short winCardId = (short)(godCardSuit * 100 + Collections.max(godCardNumbers));
 
-                Log.d(LOG_TAG, "winCardId is " + winCardId);
+                System.out.println("winCardId is " + winCardId);
 
                 for(int i = 0; i < 4; i++)
                 {
                     if(stageCardIds[i] == winCardId)
                     {
-                        Log.d(LOG_TAG, "winner is " + i);
+                        System.out.println("winner is " + i);
 
                         return (short)i;
                     }
@@ -251,20 +255,20 @@ public class TFHServerRoom
 
                 while(iterator.hasNext())
                 {
-                    Log.d(LOG_TAG, "normalCardNumber: " + cardNumber[iterator.next()]);
+                    System.out.println( "normalCardNumber: " + cardNumber[iterator.next()]);
 
                     normalCardNumbers.add(cardNumber[iterator.next()]);
                 }
 
                 short winCardId = (short)(initialCardSuit * 100 + Collections.max(normalCardNumbers));
 
-                Log.d(LOG_TAG, "winCardId is " + winCardId);
+                System.out.println("winCardId is " + winCardId);
 
                 for(int i = 0; i < 4; i++)
                 {
                     if(stageCardIds[i] == winCardId)
                     {
-                        Log.d(LOG_TAG, "winner is " + i);
+                        System.out.println("winner is " + i);
 
                         return (short)i;
                     }
@@ -275,8 +279,15 @@ public class TFHServerRoom
                 return normalCardPlayerList.get(0);
             }
         }
-        Log.d(LOG_TAG, "error happened, return -1");
+        System.out.println("error happened, return -1");
 
         return -1; // error happened
     }
+
+    @Override
+    public void run()
+    {
+
+    }
+
 }
