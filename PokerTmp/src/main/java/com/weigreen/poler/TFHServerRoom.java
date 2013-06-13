@@ -188,6 +188,8 @@ public class TFHServerRoom implements Runnable
                 northernHeap++;
             }
 
+            initialPlayerNumber = winPlayerId;
+
             TFHBridgeDataRoom roomData = new TFHBridgeDataRoom("START", winPlayerId, winPlayerId, cardId, easternHeap, northernHeap);
 
             return roomData;
