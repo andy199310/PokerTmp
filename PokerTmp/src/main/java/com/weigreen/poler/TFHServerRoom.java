@@ -233,9 +233,11 @@ public class TFHServerRoom implements Runnable
 
                 while(iterator.hasNext())
                 {
-                    System.out.println("godCardNumber: " + cardNumber[iterator.next()]);
+                    short next = iterator.next();
 
-                    godCardNumbers.add(cardNumber[iterator.next()]);
+                    System.out.println("godCardNumber: " + cardNumber[next]);
+
+                    godCardNumbers.add(cardNumber[next]);
                 }
 
                 short winCardId = (short)(godCardSuit * 100 + Collections.max(godCardNumbers));
@@ -267,9 +269,11 @@ public class TFHServerRoom implements Runnable
 
                 while(iterator.hasNext())
                 {
-                    System.out.println("normalCardNumber: " + cardNumber[iterator.next()]);
+                    short next = iterator.next();
 
-                    normalCardNumbers.add(cardNumber[iterator.next()]);
+                    System.out.println("normalCardNumber: " + cardNumber[next]);
+
+                    normalCardNumbers.add(cardNumber[next]);
                 }
 
                 short winCardId = (short)(initialCardSuit * 100 + Collections.max(normalCardNumbers));
