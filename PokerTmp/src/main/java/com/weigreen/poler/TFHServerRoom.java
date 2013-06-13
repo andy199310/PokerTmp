@@ -68,6 +68,7 @@ public class TFHServerRoom implements Runnable
                 if(pass >= 3)
                 {
                     System.out.println("triple pass, over to call god card");
+                    System.out.println("god card suit is " + godCardSuit + "\nheap is " + heap );
 
                     initialPlayerNumber = callPlayerNumber;
 
